@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Raouf's blog</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	</head>
+	
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			font-family: "Roboto";
+			background-color: #E4E2DD;
+		}
+		
+		.navbar {
+			position: absolute;
+			top: 0; left: 0;
+			background-color: #094074;
+			width: 100%; height: 50px;
+			border-bottom: 1px solid black;
+		}
+		.navbar .title {
+			font-size: 30px;
+			float: left;
+			margin-top: 5px;
+			margin-left: 10px;
+		}
+		.navbar .about {
+			font-size: 20px;
+			float: right;
+			margin-top: 11px;
+			margin-right: 10px;
+		}
+		.navbar a {
+			color: white;
+			text-decoration: none;
+		}
+		
+		.container {
+			width: 60%;
+			margin: 0 auto;
+			margin-top: 80px;
+		}
+		h1 {
+			text-align: center;
+		}
+		.article {
+			margin: 0 auto;
+			margin-bottom: 40px;
+			width: 100%;
+			border: 1px solid black;
+			background-color: white;
+		}
+		.article-image {
+			width: 100%;
+			height: 200px;
+			border-bottom: 1px solid black;
+			background-size: cover;
+			background-position: center;
+		}
+		.article-info {
+			padding: 0 10px;
+		}
+		.article-info .readmore {
+			width: 100%;
+			height: 50px;
+			background-color: #3A87F5;
+			position: relative;
+		}
+		.article-info .readmore a {
+			text-decoration: none;
+			color: black;
+			font-size: 30px;
+			position: absolute;
+			top: 50%; left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		
+		@media (max-width: 700px){
+			.container {
+				width: 100%;
+			}
+		}
+	</style>
+	
+	<body>
+		<div class="navbar">
+			<span class="title"><a href="/">Raouf's Blog</a></span>
+			<span class="about"><a href="/about">About</a></span>
+		</div>
+		
+		<div class="container">
+			<h1>All the posts</h1>
+			{% for post in site.posts %}
+				<div class="article">
+					<div class="article-image" style="background-image: url({{post.image}});"></div>
+					<div class="article-info">
+						<h2>{{post.title}}</h2>
+						<sub>By {{post.author}}</sub>
+						<p>{{post.description}}</p>
+						<p class="readmore"><a href="{{post.url}}">Read more</a></p>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</body>
+</html>

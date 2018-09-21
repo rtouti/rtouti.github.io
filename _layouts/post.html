@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>{{ page.title }}</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="/assets/css/syntax.css" rel="stylesheet">
+	</head>
+	
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			font-family: "Roboto";
+			background-color: #E4E2DD;
+			margin: 0;
+		}
+		
+		.navbar {
+			position: absolute;
+			top: 0; left: 0;
+			background-color: #094074;
+			width: 100%; height: 50px;
+			border-bottom: 1px solid black;
+		}
+		.navbar .title {
+			font-size: 30px;
+			float: left;
+			margin-top: 5px;
+			margin-left: 10px;
+		}
+		.navbar .about {
+			font-size: 20px;
+			float: right;
+			margin-top: 11px;
+			margin-right: 10px;
+		}
+		.navbar a {
+			color: white;
+			text-decoration: none;
+		}
+		
+		.container {
+			width: 60%;
+			margin: 0 auto;
+			margin-top: 50px;
+			border-right: 1px solid black;
+			border-left: 1px solid black;
+			padding: 5px 20px;
+			background-color: white;
+		}
+		.center {
+			text-align: center;
+			margin-bottom: 0;
+		}
+		.center-margin-top-zero {
+			text-align: center;
+			margin-top: 0;
+		}
+		.note {
+			background-color: #E78300;
+			border: 1px solid purple;
+			padding: 5px;
+			margin: 20px 5px;
+		}
+		p {
+			font-size: 18px;
+		}
+		.center img {
+			max-width: 100%;
+			height: auto;
+		}
+		code {
+			display: inline-block;
+			width: 100%;
+			padding: 5px;
+		}
+		code span {
+			overflow-x: hidden;
+		}
+		
+		@media (max-width: 1000px){
+			.container {
+				width: 100%;
+			}
+		}
+	</style>
+	
+	<body>
+		<div class="navbar">
+			<span class="title"><a href="/">Raouf's Blog</a></span>
+			<span class="about"><a href="/about">About</a></span>
+		</div>
+		
+		<div class="container">
+			<h1>{{page.title}}</h1>
+			{{ content }}
+		</div>
+	</body>
+</html>
