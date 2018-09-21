@@ -45,6 +45,8 @@ This code would result in an image like this:
 {: .center-margin-top-zero}
 [Figure 1]
 
+{: .note}
+The above code is in a C++-like language, where as all the rest of the code is in ES6 javascript.
 
 As you can see, each pixel don't just have a random color, instead they follow a smooth transition from pixel to pixel and the texture don't look random at the end. That is because Perlin noise (and other kinds of noise) has this property that if 2 inputs are near each other (e.g. (3.1, 2.5) and (3.11, 2.51)), the results of the noise function will be near each other too.
 
