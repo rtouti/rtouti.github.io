@@ -330,6 +330,9 @@ Why?
 When all the input to the algorithm are integers, say (5,3), the vector from the grid point (5,3) to the input will be the vector (0,0), because the input is also (5,3). The dot product for that grid point will be 0, and since the input lies exactly on that grid point, the interpolation will cause the result to be exactly that dot product, that is, 0. To solve this small issue, we generally multiply the inputs by a small value called the frequency.
 
 
+[Here is an example of Perlin noise](https://github.com/rtouti/rtouti.github.io/blob/gh-pages/examples/perlin-noise.html) for generating a heightmap.
+
+
 ## Fractal brownian motion (FBM)
 
 Fractal brownian motion is not part of the core Perlin noise algorithm, but it is (as far as I know) almost always used with it. It gives MUCH better results:
