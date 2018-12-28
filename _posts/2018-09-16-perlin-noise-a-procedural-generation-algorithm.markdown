@@ -40,7 +40,7 @@ for(int y = 0; y < 500; y++){
 This code would result in an image like this:
 
 {: .center}
-![](https://lh5.googleusercontent.com/KNCOme1lj0M1NXCi78fmpVxMqb1zRKv4-gQTV6poEKOkF9YVfVdPNrdGqeRtXkqKfdt9DrKrSZ-aEslvR9ISr7yLd_j0LC1xr-p6F4DkK8itvF_IBDVjCFTinSFZZO2NLKb-xIID)
+![Perlin noise texture](/assets/images/perlin-noise-texture.png)
 
 {: .center-margin-top-zero}
 [Figure 1]
@@ -57,7 +57,7 @@ I'll give a quick explanation first and explain it in details later:
 The inputs are considered to be on an integer grid (see Figure 2). Each floating point input lies within a square of this grid. For each of the 4 corners of that square, we generate a value. Then we interpolate between those 4 values and we have a final result. The difference between Perlin noise and value noise is how those 4 values are obtained. Where value noise uses a pseudo-random number generator, Perlin noise does a dot product between 2 vectors.
 
 {: .center}
-![](https://lh4.googleusercontent.com/s7mn3lgjiVhwMCkenXOdqKv0DV0KRDQrOyaNuEvAzpshnW_I71EzopT-fSXOZX4VjV_fGycWjWmOae7AuLIdqRItqmxkrh0px_-U4Nrq977r3xMeav7yabhf9ZuWF_dzhiT4UobK)
+![Perlin noise grid](/assets/images/perlin-noise-grid.png)
 
 {: .center-margin-top-zero}
 [Figure 2]
@@ -65,7 +65,7 @@ The inputs are considered to be on an integer grid (see Figure 2). Each floating
 The first vector is the one pointing from the grid point (the corners) to the input point. The other vector is a constant vector assigned to each grid point (see Figure 3). That one must always be the same for the same grid point, but it can change if you change the seed of the algorithm (we'll see how in a moment).
 
 {: .center}
-![](https://lh3.googleusercontent.com/VCwDBtXBTWHfGXCJaAIynTRFJuqAZbuXQExtKt4ERYSW9HpZ1dpRJD2R0D-uqlwGxnq65CAUYZyo0Ka21ejlImcdjF9AZiNNCntJhlMupDFnp1n9i-P82PdPXTpFgHjwej7DmUYJ)
+![Perlin noise grid vectors](/assets/images/perlin-noise-grid-vectors.png)
 
 {: .center-margin-top-zero}
 [Figure 3]
@@ -172,7 +172,7 @@ function Lerp(t, a1, a2){
 We could use linear interpolation but that would not give great results because it would feel unnatural, like in this image that shows 1 dimensional linear interpolation :
 
 {: .center}
-![](https://lh5.googleusercontent.com/krQ4pkBHVQdTyEVVrEAFTvKRmoiKS17HVl-7rAOIOgZFDFES2wfElCSvL5fHh2lzBBaKiALAF0SjPNKC6jpn5LdKGMPuHbL_Zd_G9wLjFiWj1NI-C8oOzRc-ip4N-shruTV4oTe7)
+![Hard transition](/assets/images/hard-transition.png)
 
 {: .center-margin-top-zero}
 [Figure 4] The abrupt transition that results from linear interpolation
@@ -180,7 +180,7 @@ We could use linear interpolation but that would not give great results because 
 As you can see, the change between what is inferior to 1 and what is superior to 1 is abrupt. What we want is something smoother, like this:
 
 {: .center}
-![](https://lh5.googleusercontent.com/LI8aCLuKlu1XC_2qHq1fEbu2YJVbAGywDT5ohj36XbNPKuHDe1FwWReZERr2Sy_9BiXrrd3Ocop0JZcN5q-o2AL_AV-cFm_Ynp7owaKu-_ZYcn1dzJdzx8Ysi6HvHyOAAjZlKQQ-)
+![Smooth transition](/assets/images/smooth-transition.png)
 
 {: .center-margin-top-zero}
 [Figure 5] The smooth transition that results from non-linear interpolation
@@ -188,7 +188,7 @@ As you can see, the change between what is inferior to 1 and what is superior to
 Or in 2D:
 
 {: .center}
-![](https://lh5.googleusercontent.com/3iC23LsGXar564XVlmGoIlfZAGE225S2hbUtXZegCNWCelrOed3v70MAPOKxkKdqallu0en7iYw10ZjPErrz0PaK_AmpYf4rZBlj8_mDCB_KCTDyhLGGkQJkOUFTCXTwLmTUOuAO)
+![2D smooth transition](/assets/images/2d-smooth-transition.png)
 
 {: .center-margin-top-zero}
 [Figure 6] The smooth transition between the corners of a grid square
@@ -198,7 +198,7 @@ With linear interpolation, we would use xf as an interpolation value (t). Instea
 To do this, we need something called an ease curve: it's just a mathematical curve that looks like this:
 
 {: .center}
-![](https://upload.wikimedia.org/wikipedia/commons/8/88/CSS3_Ease-in-out_timing_function_curve.svg)
+![Ease curve](https://upload.wikimedia.org/wikipedia/commons/8/88/CSS3_Ease-in-out_timing_function_curve.svg)
 
 {: .center-margin-top-zero}
 [Figure 7] An ease curve
@@ -338,7 +338,7 @@ When all the input to the algorithm are integers, say (5,3), the vector from the
 Fractal brownian motion is not part of the core Perlin noise algorithm, but it is (as far as I know) almost always used with it. It gives MUCH better results:
 
 {: .center}
-![](https://lh3.googleusercontent.com/aNhw0SMgPzS6M0Vc-_q01ou5CHj2As5ls5jJ-zBIn4VYJM4XSYysvIsq3nm1CbiOAp8k_7n-4bQAL4B2mPeSk6jK5K3uJWGwBMeu_IEZWZSeqLrrM7JyLi3be9jD3aaV061F-7O0)
+![Perlin noise with fractal brownian motion](/assets/images/perlin-noise-with-fbm.png)
 
 {: .center-margin-top-zero}
 [Figure 8] A colored heightmap generated with Perlin noise with fractal brownian motion
@@ -346,11 +346,68 @@ Fractal brownian motion is not part of the core Perlin noise algorithm, but it i
 Now without FBM:
 
 {: .center}
-![](https://lh3.googleusercontent.com/2rHcxLU8VobW8kotm-4mRZKoyl4OWJ3V-F4Z9Qccde4HuxG1_IIUb_6HWsSfdoGW42dXKgkGvPsh7923-TnD1gCLvvMElAMtV361jE78vo1yK2R-NzlhqVCS6lqZFJxqR7rLw3xB)
+![Perlin noise without fractal brownian motion](/assets/images/perlin-noise-without-fbm.png)
 
 {: .center-margin-top-zero}
 [Figure 9] A colored "heightmap" generated with Perlin noise without fractal brownian motion
 
-Now, I won't explain how FBM works because it's not part of the Perlin noise algorithm and because there are a lot of other resources that do just that.
+So how does it work?
 
-There you go. Hope you liked. Thanks for reading :)
+The second image doesn't look good because it is way too smooth, which make it unrealistic. Real life terrain is more noisy.
+
+So to go from the second image to the first, we need to add some noise, and luckily for us, this is basically what FBM does.
+
+Here is what 1 dimensional perlin noise might look like with the input x being a real number between 0 and 3, and with a frequency of 1 :
+
+{: .center}
+![1 dimensional perlin noise with low frequency](/assets/images/1d-perlin-noise-low-frequency.png)
+
+{: .center-margin-top-zero}
+[Figure 10] 1 dimensional perlin noise with low frequency
+
+If we take another curve with an input x between 0 and 3 but use a frequency of 2, it will look like this :
+
+{: .center}
+![1 dimensional perlin noise with medium frequency](/assets/images/1d-perlin-noise-medium-frequency.png)
+
+{: .center-margin-top-zero}
+[Figure 11] 1 dimensional perlin noise with medium frequency
+
+Even though the input is still between 0 and 3, the curve look a lot bumpier because multiplying the input by 2 made it effectively go from 0 to 6. What if we multiplied this curve by some value between 0 and 1 (let's say 0.5) and added it to the first curve?
+
+We would get this :
+
+{: .center}
+![2 octaves of Perlin noise](/assets/images/1d-perlin-noise-2-octaves.png)
+
+{: .center-margin-top-zero}
+[Figure 12] 2 octaves of Perlin noise
+
+If we add another of these curves, also doubling the frequency and decreasing the multiplier (which is called the amplitude), we would get something like this :
+
+{: .center}
+![3 octaves of Perlin noise](/assets/images/1d-perlin-noise-3-octaves.png)
+
+{: .center-margin-top-zero}
+[Figure 13] 3 octaves of Perlin noise
+
+If we keep doing this a few more times, we would get this :
+
+{: .center}
+![8 octaves of Perlin noise](/assets/images/1d-perlin-noise-8-octaves.png)
+
+{: .center-margin-top-zero}
+[Figure 14] 8 octaves of Perlin noise
+
+This is exactly what we want. A curve with an overall smooth shape, but with a lot of smaller details. This look like a realistic chain of moutains. If you do this in 2d, it is exactly how you get heightmap from above (figure 8).
+
+Each of those adding steps is called an octave.
+
+The first octave constitute the overall shape of our chain of mountains. It has a small frequency (so there is not a million moutains) and an amplitude of 1. The second octave will add smaller (so we decrease the amplitude) more noisy details to the mountain range (so we increase the frequency). We can keep doing this - adding smaller and smaller details to the moutains - until we have our final (and beautiful) result.
+
+You don't have to worry about the final value exceeding the typical range of Perlin noise because even though we keep adding stuff, those stuff are not all positive, they can also be negative, so it balances out. Also, we keep decreasing the amplitude so we are adding smaller and smaller numbers, which diminishes the chances of overflowing the range. But still, it will happen sometimes.
+
+
+There you go. This is Perlin noise in a nutshell. You can use it to generate all kinds of things, from moutains ranges to heightmaps.
+
+Hope you liked. Thanks for reading :)

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Perlin noise</title>
+	</head>
+	<style>
+		canvas {
+			position: absolute;
+			top: 50%; left: 50%;
+			transform: translate(-50%, -50%);
+			border: 1px solid black;
+		}
+	</style>
+	<body>
+		<canvas width="500" height="200"></canvas>
+		<script>
+			class Vector1 {
+				constructor(x){
+					this.x = x;
+				}
+				dot(other){
+					return this.x*other.x;
+				}
+			}
+			
+			function Shuffle(tab){
+				for(let e = tab.length-1; e > 0; e--){
+					let index = Math.round(Math.random()*(e-1)),
+						temp  = tab[e];
+					
+					tab[e] = tab[index];
+					tab[index] = temp;
+				}
+			}
+			
+			function MakePermutation(){
+				let P = [];
+				for(let i = 0; i < 256; i++){
+					P.push(i);
+				}
+				Shuffle(P);
+				for(let i = 0; i < 256; i++){
+					P.push(P[i]);
+				}
+				
+				return P;
+			}
+            let P = MakePermutation();
+            let str = "[";
+            for(let p = 0; p < P.length; p++){
+                if(p !== P.length-1)
+                    str += P[p] + ", ";
+                else
+                    str += P[p] + "];";
+            }
+            console.log(str);
+
+            P = [81, 196, 117, 173, 180, 239, 9, 66, 22, 52, 135, 149, 225, 152, 29, 206, 111, 207, 231, 108, 140, 86, 104, 170, 51, 221, 236, 217, 97, 85, 54, 49, 123, 255, 188, 71, 88, 82, 158, 132, 172, 202, 244, 142, 235, 113, 219, 12, 21, 0, 211, 203, 148, 100, 194, 230, 105, 84, 109, 114, 118, 67, 15, 176, 150, 161, 226, 30, 146, 205, 213, 157, 166, 55, 70, 130, 11, 92, 1, 80, 168, 209, 35, 171, 237, 214, 31, 254, 2, 19, 44, 74, 129, 156, 102, 26, 20, 3, 249, 193, 252, 47, 116, 124, 128, 222, 40, 242, 110, 233, 186, 37, 229, 101, 250, 201, 218, 246, 164, 137, 89, 247, 5, 8, 153, 27, 122, 162, 127, 41, 24, 189, 23, 34, 87, 182, 90, 96, 61, 39, 181, 165, 191, 73, 147, 119, 76, 238, 160, 253, 78, 248, 159, 45, 125, 204, 245, 154, 115, 91, 75, 167, 145, 208, 227, 25, 79, 240, 69, 99, 155, 126, 94, 42, 43, 120, 48, 58, 133, 234, 121, 144, 64, 190, 199, 241, 7, 38, 50, 16, 17, 141, 57, 195, 63, 163, 18, 192, 223, 169, 216, 112, 36, 33, 72, 28, 131, 136, 46, 56, 175, 177, 98, 220, 10, 185, 4, 251, 139, 215, 53, 59, 198, 178, 107, 106, 93, 103, 14, 62, 187, 143, 83, 184, 224, 179, 77, 95, 243, 13, 174, 6, 68, 65, 200, 134, 60, 232, 138, 183, 197, 212, 228, 151, 32, 210, 81, 196, 117, 173, 180, 239, 9, 66, 22, 52, 135, 149, 225, 152, 29, 206, 111, 207, 231, 108, 140, 86, 104, 170, 51, 221, 236, 217, 97, 85, 54, 49, 123, 255, 188, 71, 88, 82, 158, 132, 172, 202, 244, 142, 235, 113, 219, 12, 21, 0, 211, 203, 148, 100, 194, 230, 105, 84, 109, 114, 118, 67, 15, 176, 150, 161, 226, 30, 146, 205, 213, 157, 166, 55, 70, 130, 11, 92, 1, 80, 168, 209, 35, 171, 237, 214, 31, 254, 2, 19, 44, 74, 129, 156, 102, 26, 20, 3, 249, 193, 252, 47, 116, 124, 128, 222, 40, 242, 110, 233, 186, 37, 229, 101, 250, 201, 218, 246, 164, 137, 89, 247, 5, 8, 153, 27, 122, 162, 127, 41, 24, 189, 23, 34, 87, 182, 90, 96, 61, 39, 181, 165, 191, 73, 147, 119, 76, 238, 160, 253, 78, 248, 159, 45, 125, 204, 245, 154, 115, 91, 75, 167, 145, 208, 227, 25, 79, 240, 69, 99, 155, 126, 94, 42, 43, 120, 48, 58, 133, 234, 121, 144, 64, 190, 199, 241, 7, 38, 50, 16, 17, 141, 57, 195, 63, 163, 18, 192, 223, 169, 216, 112, 36, 33, 72, 28, 131, 136, 46, 56, 175, 177, 98, 220, 10, 185, 4, 251, 139, 215, 53, 59, 198, 178, 107, 106, 93, 103, 14, 62, 187, 143, 83, 184, 224, 179, 77, 95, 243, 13, 174, 6, 68, 65, 200, 134, 60, 232, 138, 183, 197, 212, 228, 151, 32, 210];
+            
+            function GetConstantVector(v){
+				let h = v & 3;
+				if(h == 0)
+					return new Vector1(1.0);
+                else
+                    return new Vector1(-1.0);
+			}
+			
+			function Fade(t){
+				return ((6*t - 15)*t + 10)*t*t*t;
+			}
+			
+			function Lerp(t, a1, a2){
+				return a1 + t*(a2-a1);
+			}
+			
+			function Noise1D(x){
+				let X = Math.floor(x) & 255;
+
+				let xf = x-Math.floor(x);
+
+                //Get the 2 constant vectors
+				let right = new Vector1(xf-1.0);
+				let left = new Vector1(xf);
+                
+                //Get the values for the 2 integer points surrounding x
+				let valueRight = P[X];
+				let valueLeft = P[X+1];
+                
+                //Get the dot product for the 2 integer points
+				let dotRight = right.dot(GetConstantVector(valueRight));
+				let dotLeft = left.dot(GetConstantVector(valueLeft));
+				
+				let u = Fade(xf);
+				
+				return Lerp(u, dotLeft, dotRight);
+
+			}
+			
+			
+			let ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+            
+            ctx.strokeStyle = "black";
+            ctx.beginPath();
+			for(let x = 0; x < 500; x++){
+                let n = 0.0,
+                    a = 1.0,
+                    f = 3/500;
+                for(let o = 0; o < 8; o++){
+                    let v = a*Noise1D(x*f);
+                    
+                    n += v;
+                    
+                    a *= 0.5;
+                    f *= 2.0;
+                }
+
+                if(x !== 0)
+                    ctx.lineTo(x, 100 + n*150);
+                else
+                    ctx.moveTo(x, 100 + n*150);
+            }
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 100);
+            ctx.lineTo(500, 100);
+            ctx.stroke();
+		</script>
+	</body>
+</html>
