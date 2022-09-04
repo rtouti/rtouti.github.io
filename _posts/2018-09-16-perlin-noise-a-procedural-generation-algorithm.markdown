@@ -42,11 +42,14 @@ This code would result in an image like this:
 {: .center}
 ![Perlin noise texture](/assets/images/perlin-noise-texture.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 1]
 
 {: .note}
 The above code is in a C++-like language, where as all the rest of the code is in ES6 javascript.
+
+{: .note}
+Also, the code has been written for readability, not performance. It creates a lot of unnecessary temporary Vector2 objects. If you want to use Perlin noise for a real-world project, I recommend using a more standard (and faster) implementation, like [Ken Perlin's reference implementation](https://cs.nyu.edu/~perlin/noise/). You could even use some [noise functions that are implemented entirely on the GPU](https://github.com/ashima/webgl-noise), which is generally much faster than a CPU implementation.
 
 As you can see, each pixel don't just have a random color, instead they follow a smooth transition from pixel to pixel and the texture don't look random at the end. That is because Perlin noise (and other kinds of noise) has this property that if 2 inputs are near each other (e.g. (3.1, 2.5) and (3.11, 2.51)), the results of the noise function will be near each other too.
 
@@ -59,7 +62,7 @@ The inputs are considered to be on an integer grid (see Figure 2). Each floating
 {: .center}
 ![Perlin noise grid](/assets/images/perlin-noise-grid.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 2]
 
 The first vector is the one pointing from the grid point (the corners) to the input point. The other vector is a constant vector assigned to each grid point (see Figure 3). That one must always be the same for the same grid point, but it can change if you change the seed of the algorithm (we'll see how in a moment).
@@ -67,7 +70,7 @@ The first vector is the one pointing from the grid point (the corners) to the in
 {: .center}
 ![Perlin noise grid vectors](/assets/images/perlin-noise-grid-vectors.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 3]
 
 An implementation to get the first vector would look like that:
@@ -174,7 +177,7 @@ We could use linear interpolation but that would not give great results because 
 {: .center}
 ![Hard transition](/assets/images/hard-transition.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 4] The abrupt transition that results from linear interpolation
 
 As you can see, the change between what is inferior to 1 and what is superior to 1 is abrupt. What we want is something smoother, like this:
@@ -182,7 +185,7 @@ As you can see, the change between what is inferior to 1 and what is superior to
 {: .center}
 ![Smooth transition](/assets/images/smooth-transition.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 5] The smooth transition that results from non-linear interpolation
 
 Or in 2D:
@@ -190,7 +193,7 @@ Or in 2D:
 {: .center}
 ![2D smooth transition](/assets/images/2d-smooth-transition.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 6] The smooth transition between the corners of a grid square
 
 With linear interpolation, we would use xf as an interpolation value (t). Instead we are going to transform xf and yf into u and v. We will do it in a way that, given a value of t between 0.0 and 0.5 (excluded), the transformed value will be something a little bit smaller (but capped at 0.0). Also, given a value of t between 0.5 (excluded) and 1.0, the transformed value would be a little larger (but capped at 1.0). For 0.5, the transformed value should be 0.5. Doing this will result in a curvy transition, like in figures 5 and 6.
@@ -200,7 +203,7 @@ To do this, we need something called an ease curve: it's just a mathematical cur
 {: .center}
 ![Ease curve](https://upload.wikimedia.org/wikipedia/commons/8/88/CSS3_Ease-in-out_timing_function_curve.svg)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 7] An ease curve
 
 If you look closely, you can see that for an input (xf or yf, the x axis) between 0.0 and 0.5, the output (u or v, the y axis) is a little bit closer to 0.0. And for a value between 0.5 and 1.0, the output is a little bit closer to 1.0. For x=0.5, y=0.5. That will do the work perfectly.
@@ -340,7 +343,7 @@ Fractal brownian motion is not part of the core Perlin noise algorithm, but it i
 {: .center}
 ![Perlin noise with fractal brownian motion](/assets/images/perlin-noise-with-fbm.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 8] A colored heightmap generated with Perlin noise with fractal brownian motion
 
 Now without FBM:
@@ -348,7 +351,7 @@ Now without FBM:
 {: .center}
 ![Perlin noise without fractal brownian motion](/assets/images/perlin-noise-without-fbm.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 9] A colored "heightmap" generated with Perlin noise without fractal brownian motion
 
 So how does it work?
@@ -357,46 +360,46 @@ The second image doesn't look good because it is way too smooth, which make it u
 
 So to go from the second image to the first, we need to add some noise, and luckily for us, this is basically what FBM does.
 
-Here is what 1 dimensional perlin noise might look like with the input x being a real number between 0 and 3, and with a frequency of 1 :
+Here is what 1 dimensional Perlin noise might look like with the input x being a real number between 0 and 3, and with a frequency of 1 :
 
-{: .center}
-![1 dimensional perlin noise with low frequency](/assets/images/1d-perlin-noise-low-frequency.png)
+{: .center .black-border}
+![1 dimensional Perlin noise with frequency of 1](/assets/images/1d-perlin-noise-frequency-of-1.png)
 
-{: .center-margin-top-zero}
-[Figure 10] 1 dimensional perlin noise with low frequency
+{: .center .margin-top-zero}
+[Figure 10] 1 dimensional Perlin noise with frequency of 1
 
 If we take another curve with an input x between 0 and 3 but use a frequency of 2, it will look like this :
 
-{: .center}
-![1 dimensional perlin noise with medium frequency](/assets/images/1d-perlin-noise-medium-frequency.png)
+{: .center .black-border}
+![1 dimensional Perlin noise with frequency of 2](/assets/images/1d-perlin-noise-frequency-of-2.png)
 
-{: .center-margin-top-zero}
-[Figure 11] 1 dimensional perlin noise with medium frequency
+{: .center .margin-top-zero}
+[Figure 11] 1 dimensional Perlin noise with frequency of 2
 
 Even though the input is still between 0 and 3, the curve look a lot bumpier because multiplying the input by 2 made it effectively go from 0 to 6. What if we multiplied this curve by some value between 0 and 1 (let's say 0.5) and added it to the first curve?
 
 We would get this :
 
-{: .center}
+{: .center .black-border}
 ![2 octaves of Perlin noise](/assets/images/1d-perlin-noise-2-octaves.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 12] 2 octaves of Perlin noise
 
 If we add another of these curves, also doubling the frequency and decreasing the multiplier (which is called the amplitude), we would get something like this :
 
-{: .center}
+{: .center .black-border}
 ![3 octaves of Perlin noise](/assets/images/1d-perlin-noise-3-octaves.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 13] 3 octaves of Perlin noise
 
 If we keep doing this a few more times, we would get this :
 
-{: .center}
+{: .center .black-border}
 ![8 octaves of Perlin noise](/assets/images/1d-perlin-noise-8-octaves.png)
 
-{: .center-margin-top-zero}
+{: .center .margin-top-zero}
 [Figure 14] 8 octaves of Perlin noise
 
 This is exactly what we want. A curve with an overall smooth shape, but with a lot of smaller details. This look like a realistic chain of moutains. If you do this in 2d, it is exactly how you get heightmap from above (figure 8).
