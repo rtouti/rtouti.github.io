@@ -53,12 +53,11 @@
 			text-decoration: none;
 		}
 		
-		.container {
+		.container, .comments {
 			width: 60%;
 			margin: 0 auto;
 			margin-top: 50px;
-			border-right: 1px solid black;
-			border-left: 1px solid black;
+			border: 1px solid black;
 			padding: 5px 20px;
 			background-color: white;
 		}
@@ -98,7 +97,7 @@
 		}
 		
 		@media (max-width: 1000px){
-			.container {
+			.container, .comments {
 				width: 100%;
 			}
 		}
@@ -111,8 +110,20 @@
 		</div>
 		
 		<div class="container">
-			<h1>{{page.title}}</h1>
+			<h1>{{ page.title }}</h1>
 			{{ content }}
+		</div>
+		<div class="comments">
+			<h2>Comments</h2>
+			<p>There is no spam filter yet, so to avoid "Congratulations, you won free money!" kind of things, comments will need to be approved manually before showing up here. Sorry :/</p>
+			<div id="cusdis_thread"
+				data-host="https://cusdis.com"
+				data-app-id="4832b910-b336-4823-b4f6-0a76139bf4a0"
+				data-page-id="{{ page.permalink }}"
+				data-page-url="{{ page.url }}"
+				data-page-title="{{ page.title }}"
+			></div>
+			<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
 		</div>
 	</body>
 </html>
