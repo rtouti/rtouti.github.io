@@ -100,7 +100,7 @@ We first create the permutation table and shuffle it. I'll show you the code and
 ```javascript
 // Create an array (our permutation table) with the values 0 to 255 in order
 const permutation = [];
-for(let i = 0; i < 256; i++){
+for(let i = 0; i < 256; i++) {
 	permutation[i] = i;
 }
 
@@ -115,10 +115,10 @@ Next, we need a value from that table for each of the corners. There is a restri
 
 ```javascript
 // Select a value in the array for each of the 4 corners
-let valueTopRight = P[P[X+1]+Y+1];
-let valueTopLeft = P[P[X]+Y+1];
-let valueBottomRight = P[P[X+1]+Y];
-let valueBottomLeft = P[P[X]+Y];
+const valueTopRight = P[P[X+1]+Y+1];
+const valueTopLeft = P[P[X]+Y+1];
+const valueBottomRight = P[P[X+1]+Y];
+const valueBottomLeft = P[P[X]+Y];
 ```
 
 The way we selected the values for the corners in the code above respect this restriction. If we are in grid cell (0, 0), "valueBottomRight" will be equal to P[P[0+1]+0] = P[P[1]+0]. Whereas in the grid cell (1, 0), "valueBottomLeft" will be equal to P[P[1]+0]. "valueBottomRight" and "valueBottomLeft" are the same. The restriction is respected.
@@ -132,9 +132,9 @@ Also, since it's easier to generate them, those constant vectors can be 1 of 4 d
 To find the constant vectors given a value from a permutation table, we can do something like that:
 
 ```javascript
-function GetConstantVector(v){
+function GetConstantVector(v) {
 	// v is the value from the permutation table
-	let h = v & 3;
+	const h = v & 3;
 	if(h === 0)
 		return new Vector2(1.0, 1.0);
 	else if(h === 1)
@@ -151,10 +151,10 @@ Since v is between 0 and 255 and we have 4 possible vectors, we can do a & 3 (eq
 We can now calculate the dot products:
 
 ```javascript
-let dotTopRight = topRight.dot(GetConstantVector(valueTopRight));
-let dotTopLeft = topLeft.dot(GetConstantVector(valueTopLeft));
-let dotBottomRight = bottomRight.dot(GetConstantVector(valueBottomRight));
-let dotBottomLeft = bottomLeft.dot(GetConstantVector(valueBottomLeft));
+const dotTopRight = topRight.dot(GetConstantVector(valueTopRight));
+const dotTopLeft = topLeft.dot(GetConstantVector(valueTopLeft));
+const dotBottomRight = bottomRight.dot(GetConstantVector(valueBottomRight));
+const dotBottomLeft = bottomLeft.dot(GetConstantVector(valueBottomLeft));
 ```
 
 Now that we have to dot product for each corner, we need to somehow mix them to get a single value. For this, we'll use interpolation. Interpolation is a way to find what value lies between 2 other values (say, a1 and a2), given some other value t between 0.0 and 1.0 (a percentage basically, where 0.0 is 0% and 1.0 is 100%). For example: if a1 is 10, a2 is 20 and t is 0.5 (so 50%), the interpolated value would be 15 because it's midway between 10 and 20 (50% or 0.5). Another example: a1=50, a2=100 and t=0.4. Then the interpolated value would be at 40% of the way between 50 and 100, that is 70. This is called linear interpolation because the interpolated values are in a linear curve.
@@ -167,7 +167,7 @@ Note that if we change the input point just a little bit, the vectors between ea
 Here is the code for a function that does linear interpolation (also called lerp):
 
 ```javascript
-function Lerp(t, a1, a2){
+function Lerp(t, a1, a2) {
 	return a1 + t*(a2-a1);
 }
 ```
@@ -212,12 +212,12 @@ The curve above is the ease function used by Ken Perlin in his implementation of
 
 ```javascript
 // Unoptimized version
-function Fade(t){
+function Fade(t) {
 	return 6*t*t*t*t*t - 15*t*t*t*t + 10*t*t*t;
 }
 
 // Optimized version (less multiplications)
-function Fade(t){
+function Fade(t) {
 	return ((6*t - 15)*t + 10)*t*t*t;
 }
 ```
@@ -225,9 +225,9 @@ function Fade(t){
 Now, we just have to do linear interpolation the way we said before, but with u and v as interpolation values (t). Here is the code:
 
 ```javascript
-let u = Fade(xf);
-let v = Fade(yf);
-let result = Lerp(u,
+const u = Fade(xf);
+const v = Fade(yf);
+const result = Lerp(u,
 	Lerp(v, dotBottomLeft, dotTopLeft),
 	Lerp(v, dotBottomRight, dotTopRight)
 );
@@ -249,7 +249,7 @@ class Vector2 {
 }
 
 function Shuffle(arrayToShuffle) {
-	for(let e = arrayToShuffle.length-1; e > 0; e--){
+	for(let e = arrayToShuffle.length-1; e > 0; e--) {
 		const index = Math.round(Math.random()*(e-1));
 		const temp = arrayToShuffle[e];
 		
@@ -260,13 +260,13 @@ function Shuffle(arrayToShuffle) {
 
 function MakePermutation() {
 	const permutation = [];
-	for(let i = 0; i < 256; i++){
+	for(let i = 0; i < 256; i++) {
 		permutation.push(i);
 	}
 
 	Shuffle(permutation);
 	
-	for(let i = 0; i < 256; i++){
+	for(let i = 0; i < 256; i++) {
 		permutation.push(permutation[i]);
 	}
 	
