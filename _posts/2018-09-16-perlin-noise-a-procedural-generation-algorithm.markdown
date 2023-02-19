@@ -15,24 +15,24 @@ It took me quite some time to understand how the algorithm works and a lot of re
 
 Perlin noise is a popular procedural generation algorithm invented by Ken Perlin. It can be used to generate things like textures and terrain procedurally, meaning without them being manually made by an artist or designer. The algorithm can have 1 or more dimensions, which is basically the number of inputs it gets. In this article, I will use 2 dimensions because it's easier to visualize than 3 dimensions. There is also a lot of confusion about what Perlin noise is and what it is not. It is often confused with value noise and simplex noise. There is basically 4 type of noise that are similar and that are often confused with one another : classic Perlin noise, improved Perlin noise, simplex noise, and value noise. Improved Perlin noise is an improved version of classic Perlin noise. Simplex noise is different but is also made by Ken Perlin. Value noise is also different. A rule of thumb is that if the noise algorithm uses a (pseudo-)random number generator, it's probably value noise. This article is about improved Perlin noise.
 
-First, how to use it. The algorithm takes as input a certain number of floating point parameters (depending on the dimension) and return a value in a certain range (for Perlin noise, that range is generally said to be between -1.0 and +1.0 but it's actually different. According to this [answer](https://stackoverflow.com/questions/18261982/output-range-of-perlin-noise) (which refers to this [forum](https://www.gamedev.net/forums/topic/285533-2d-perlin-noise-gradient-noise-range--/)), the range is [sqrt(n)/2, sqrt(n)/2], where n is the dimension). Let's say it is in 2 dimensions, so it takes 2 parameters: x and y. Now, x and y can be anything but they are generally a position. To generate a texture, x and y would be the coordinates of the pixels in the texture (multiplied by a small number called the frequency but we will see that at the end). So for texture generation, we would loop through every pixel in the texture, calling the Perlin noise function for each one and decide, based on the return value, what color that pixel would be.
+First, how to use it. The algorithm takes as input a certain number of floating point parameters (depending on the dimension) and return a value in a certain range (for Perlin noise, that range is generally said to be between -1.0 and +1.0 but [it's actually a bit different](https://digitalfreepen.com/2017/06/20/range-perlin-noise.html)). Let's say it is in 2 dimensions, so it takes 2 parameters: x and y. Now, x and y can be anything but they are generally a position. To generate a texture, x and y would be the coordinates of the pixels in the texture (multiplied by a small number called the frequency but we will see that at the end). So for texture generation, we would loop through every pixel in the texture, calling the Perlin noise function for each one and decide, based on the return value, what color that pixel would be.
 
 An example implementation would look like this:
 
 ```c++
 Color pixels[500][500];
 
-for(int y = 0; y < 500; y++){
-	for(int x = 0; x < 500; x++){
-		//Noise2D generally returns a value in the range [-1.0, 1.0]
+for (int y = 0; y < 500; y++) {
+	for (int x = 0; x < 500; x++) {
+		// Noise2D generally returns a value approximately in the range [-1.0, 1.0]
 		float n = Noise2D(x*0.01, y*0.01);
 		
-		//Transform the range to [0.0, 1.0], supposing that the range of Noise2D is [-1.0, 1.0]
+		// Transform the range to [0.0, 1.0], supposing that the range of Noise2D is [-1.0, 1.0]
 		n += 1.0;
 		n /= 2.0;
 		
 		int c = Math.round(255*n);
-		pixels[y][x] = new Color(c, c, c);
+		pixels[y][x] = Color(c, c, c);
 	}
 }
 ```
@@ -73,20 +73,20 @@ The first vector is the one pointing from the grid point (the corners) to the in
 {: .center .margin-top-zero}
 [Figure 3]
 
-An implementation to get the first vector would look like that:
+An implementation to get the first vector would look like this:
 
 
 ```javascript
-//Suppose x, y and z are the float input
-let X = Math.floor(x) & 255;
-let Y = Math.floor(y) & 255;
-let xf = x-Math.floor(x);
-let yf = y-Math.floor(y);
+// Suppose x, y and z are the float input
+const X = Math.floor(x) & 255;	// Used later
+const Y = Math.floor(y) & 255;	// Used later
+const xf = x-Math.floor(x);
+const yf = y-Math.floor(y);
 
-let topRight = new Vector2(xf-1.0, yf-1.0);
-let topLeft = new Vector2(xf, yf-1.0);
-let bottomRight = new Vector2(xf-1.0, yf);
-let bottomLeft = new Vector2(xf, yf);
+const topRight = new Vector2(xf-1.0, yf-1.0);
+const topLeft = new Vector2(xf, yf-1.0);
+const bottomRight = new Vector2(xf-1.0, yf);
+const bottomLeft = new Vector2(xf, yf);
 ```
 
 Generally, in Perlin noise implementations, the noise will "wrap" after every multiple of 256 (let's call this number w), meaning it will repeat. That's because, to give every grid point a constant vector, we'll soon need something called a permutation table. It's an array of size w containing all the integers between 0 and w-1 but shuffled (i.e. a permutation). The index for this array (the value between the square brackets [ ]) is X or Y (or a value near them) so it need to be less than 256. The noise "wraps" because if, for example, the input x is 256, X will be equal to 0. This 0 will be used to index the permutation table and then to generate a random vector. Since X is 0 at every multiple of 256, the random vector will be the same at all those points, so the noise repeats. You can if you want have a larger permutation table (say, of size 512) and in that case the noise would wrap at every multiple of 512.
@@ -98,14 +98,14 @@ We first create the permutation table and shuffle it. I'll show you the code and
 
 
 ```javascript
-//Create an array (our permutation table) with the values 0 to 255 in order
-let P = new int[256];
+// Create an array (our permutation table) with the values 0 to 255 in order
+const permutation = [];
 for(let i = 0; i < 256; i++){
-	P[i] = i;
+	permutation[i] = i;
 }
 
-//Shuffle it
-P = Shuffle(P);
+// Shuffle it
+permutation = Shuffle(permutation);
 ```
 
 {: .note}
@@ -114,7 +114,7 @@ An example of a shuffle function is given in the complete code at the end of the
 Next, we need a value from that table for each of the corners. There is a restriction however: a corner must always get the same value, no matter which of the 4 grid cells that has it as a corner contains the input value. For example, if the top-right corner of the grid cell (0, 0) has a value of 42, then the top-left corner of grid cell (1, 0) must also have the same value of 42. It's the same grid point, so same value no matter from which grid cell it's calculated:
 
 ```javascript
-//Select a value in the array for each of the 4 corners
+// Select a value in the array for each of the 4 corners
 let valueTopRight = P[P[X+1]+Y+1];
 let valueTopLeft = P[P[X]+Y+1];
 let valueBottomRight = P[P[X+1]+Y];
@@ -133,7 +133,7 @@ To find the constant vectors given a value from a permutation table, we can do s
 
 ```javascript
 function GetConstantVector(v){
-	//v is the value from the permutation table
+	// v is the value from the permutation table
 	let h = v & 3;
 	if(h === 0)
 		return new Vector2(1.0, 1.0);
@@ -211,12 +211,12 @@ If you look closely, you can see that for an input (xf or yf, the x axis) betwee
 The curve above is the ease function used by Ken Perlin in his implementation of Perlin Noise. The equation is 6t5-15t4+10t3. This is also called a fade function. In code, it looks like that:
 
 ```javascript
-//Unoptimized version
+// Unoptimized version
 function Fade(t){
 	return 6*t*t*t*t*t - 15*t*t*t*t + 10*t*t*t;
 }
 
-//Optimized version (less multiplications)
+// Optimized version (less multiplications)
 function Fade(t){
 	return ((6*t - 15)*t + 10)*t*t*t;
 }
@@ -238,42 +238,45 @@ That's it! Perlin noise completed. Here's the full code:
 
 ```javascript
 class Vector2 {
-	constructor(x, y){
+	constructor(x, y) {
 		this.x = x;
 		this.y = y;
 	}
-	dot(other){
+
+	dot(other) {
 		return this.x*other.x + this.y*other.y;
 	}
 }
 
-function Shuffle(tab){
-	for(let e = tab.length-1; e > 0; e--){
-		let index = Math.round(Math.random()*(e-1)),
-			temp  = tab[e];
+function Shuffle(arrayToShuffle) {
+	for(let e = arrayToShuffle.length-1; e > 0; e--){
+		const index = Math.round(Math.random()*(e-1));
+		const temp = arrayToShuffle[e];
 		
-		tab[e] = tab[index];
-		tab[index] = temp;
+		arrayToShuffle[e] = arrayToShuffle[index];
+		arrayToShuffle[index] = temp;
 	}
 }
 
-function MakePermutation(){
-	let P = [];
+function MakePermutation() {
+	const permutation = [];
 	for(let i = 0; i < 256; i++){
-		P.push(i);
+		permutation.push(i);
 	}
-	Shuffle(P);
+
+	Shuffle(permutation);
+	
 	for(let i = 0; i < 256; i++){
-		P.push(P[i]);
+		permutation.push(permutation[i]);
 	}
 	
-	return P;
+	return permutation;
 }
-let P = MakePermutation();
+const Permutation = MakePermutation();
 
-function GetConstantVector(v){
-	//v is the value from the permutation table
-	let h = v & 3;
+function GetConstantVector(v) {
+	// v is the value from the permutation table
+	const h = v & 3;
 	if(h == 0)
 		return new Vector2(1.0, 1.0);
 	else if(h == 1)
@@ -284,45 +287,44 @@ function GetConstantVector(v){
 		return new Vector2(1.0, -1.0);
 }
 
-function Fade(t){
+function Fade(t) {
 	return ((6*t - 15)*t + 10)*t*t*t;
 }
 
-function Lerp(t, a1, a2){
+function Lerp(t, a1, a2) {
 	return a1 + t*(a2-a1);
 }
 
-function Noise2D(x, y){
-	let X = Math.floor(x) & 255;
-	let Y = Math.floor(y) & 255;
+function Noise2D(x, y) {
+	const X = Math.floor(x) & 255;
+	const Y = Math.floor(y) & 255;
 
-	let xf = x-Math.floor(x);
-	let yf = y-Math.floor(y);
+	const xf = x-Math.floor(x);
+	const yf = y-Math.floor(y);
 
-	let topRight = new Vector2(xf-1.0, yf-1.0);
-	let topLeft = new Vector2(xf, yf-1.0);
-	let bottomRight = new Vector2(xf-1.0, yf);
-	let bottomLeft = new Vector2(xf, yf);
+	const topRight = new Vector2(xf-1.0, yf-1.0);
+	const topLeft = new Vector2(xf, yf-1.0);
+	const bottomRight = new Vector2(xf-1.0, yf);
+	const bottomLeft = new Vector2(xf, yf);
 	
-	//Select a value in the array for each of the 4 corners
-	let valueTopRight = P[P[X+1]+Y+1];
-	let valueTopLeft = P[P[X]+Y+1];
-	let valueBottomRight = P[P[X+1]+Y];
-	let valueBottomLeft = P[P[X]+Y];
+	// Select a value from the permutation array for each of the 4 corners
+	const valueTopRight = Permutation[Permutation[X+1]+Y+1];
+	const valueTopLeft = Permutation[Permutation[X]+Y+1];
+	const valueBottomRight = Permutation[Permutation[X+1]+Y];
+	const valueBottomLeft = Permutation[Permutation[X]+Y];
 	
-	let dotTopRight = topRight.dot(GetConstantVector(valueTopRight));
-	let dotTopLeft = topLeft.dot(GetConstantVector(valueTopLeft));
-	let dotBottomRight = bottomRight.dot(GetConstantVector(valueBottomRight));
-	let dotBottomLeft = bottomLeft.dot(GetConstantVector(valueBottomLeft));
+	const dotTopRight = topRight.dot(GetConstantVector(valueTopRight));
+	const dotTopLeft = topLeft.dot(GetConstantVector(valueTopLeft));
+	const dotBottomRight = bottomRight.dot(GetConstantVector(valueBottomRight));
+	const dotBottomLeft = bottomLeft.dot(GetConstantVector(valueBottomLeft));
 	
-	let u = Fade(xf);
-	let v = Fade(yf);
+	const u = Fade(xf);
+	const v = Fade(yf);
 	
 	return Lerp(u,
 		Lerp(v, dotBottomLeft, dotTopLeft),
 		Lerp(v, dotBottomRight, dotTopRight)
 	);
-
 }
 ```
 
@@ -402,14 +404,34 @@ If we keep doing this a few more times, we would get this :
 {: .center .margin-top-zero}
 [Figure 14] 8 octaves of Perlin noise
 
-This is exactly what we want. A curve with an overall smooth shape, but with a lot of smaller details. This look like a realistic chain of moutains. If you do this in 2d, it is exactly how you get heightmap from above (figure 8).
+This is exactly what we want. A curve with an overall smooth shape, but with a lot of smaller details. This look like a realistic chain of moutains. If you do this in 2d, it's exactly how you get the heightmap from Figure 8.
 
-Each of those adding steps is called an octave.
+We just added multiple "layers" of noise together, each with a different amplitude and frequency, and when one layer has a frequency that is double the frequency of the previous layer, this layer is called an octave. Though you will probably often see the term "octave" used more loosely for when the frequency is multiplied by a number other than 2.
 
 The first octave constitute the overall shape of our chain of mountains. It has a small frequency (so there is not a million moutains) and an amplitude of 1. The second octave will add smaller (so we decrease the amplitude) more noisy details to the mountain range (so we increase the frequency). We can keep doing this - adding smaller and smaller details to the moutains - until we have our final (and beautiful) result.
 
 You don't have to worry about the final value exceeding the typical range of Perlin noise because even though we keep adding stuff, those stuff are not all positive, they can also be negative, so it balances out. Also, we keep decreasing the amplitude so we are adding smaller and smaller numbers, which diminishes the chances of overflowing the range. But still, it will happen sometimes.
 
+In code, it would look something like this:
+
+
+```javascript
+function FractalBrownianMotion(x, y, numOctaves) {
+	let result = 0.0;
+	let amplitude = 1.0;
+	let frequency = 0.005;
+
+	for (let octave = 0; octave < numOctaves; octave++) {
+		const n = amplitude * Noise2D(x * frequency, y * frequency);
+		result += n;
+		
+		amplitude *= 0.5;
+		frequency *= 2.0;
+	}
+
+	return result;
+}
+```
 
 There you go. This is Perlin noise in a nutshell. You can use it to generate all kinds of things, from moutains ranges to heightmaps.
 
