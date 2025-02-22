@@ -1,129 +1,153 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123362726-2"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-123362726-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-		  gtag('config', 'UA-123362726-2');
-		</script>
-		<meta name="google-site-verification" content="L6yY_Uj0w0OCiV3f8s0n_LynsaTkn6n0PusnyUjz_-g" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta charset="utf-8" />
-		<title>{{ page.title }}</title>
-		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<link href="/assets/css/syntax.css" rel="stylesheet">
-	</head>
-	
-	<style>
-		* {
-			box-sizing: border-box;
-		}
-		body {
-			font-family: "Roboto";
-			background-color: #E4E2DD;
-			margin: 0;
-		}
-		
-		.navbar {
-			position: absolute;
-			top: 0; left: 0;
-			background-color: #094074;
-			width: 100%; height: 50px;
-			border-bottom: 1px solid black;
-		}
-		.navbar .title {
-			font-size: 30px;
-			float: left;
-			margin-top: 5px;
-			margin-left: 10px;
-		}
-		.navbar .about {
-			font-size: 20px;
-			float: right;
-			margin-top: 11px;
-			margin-right: 10px;
-		}
-		.navbar a {
-			color: white;
-			text-decoration: none;
-		}
-		
-		.container, .comments {
-			width: 60%;
-			margin: 0 auto;
-			margin-top: 50px;
-			border: 1px solid black;
-			padding: 5px 20px;
-			background-color: white;
-		}
-		.center {
-			text-align: center;
-			margin-bottom: 0;
-		}
-		.margin-top-zero {
-			margin-top: 0;
-		}
-		.black-border img {
-			border: 1px solid black;
-		}
-		.note {
-			background-color: #E78300;
-			border: 1px solid purple;
-			padding: 5px;
-			margin: 20px 5px;
-		}
-		p {
-			font-size: 18px;
-		}
-		.center img {
-			max-width: 100%;
-			height: auto;
-		}
-		div.highlight {
-			overflow-x: auto;
-		}
-		code {
-			display: inline-block;
-			width: 100%;
-			padding: 5px;
-		}
-		code span {
-			overflow-x: hidden;
-		}
-		
-		@media (max-width: 1000px){
-			.container, .comments {
-				width: 100%;
-			}
-		}
-	</style>
-	
-	<body>
-		<div class="navbar">
-			<span class="title"><a href="/">Raouf's Blog</a></span>
-			<span class="about"><a href="/about">About</a></span>
-		</div>
-		
-		<div class="container">
-			<h1>{{ page.title }}</h1>
-			{{ content }}
-		</div>
-		<div class="comments">
-			<h2>Comments</h2>
-			<p>There is no spam filter yet, so to avoid "Congratulations, you won free money!" kind of things, comments will need to be approved manually before showing up here. Sorry :/</p>
-			<div id="cusdis_thread"
-				data-host="https://cusdis.com"
-				data-app-id="4832b910-b336-4823-b4f6-0a76139bf4a0"
-				data-page-id="{{ page.permalink }}"
-				data-page-url="{{ page.url }}"
-				data-page-title="{{ page.title }}"
-			></div>
-			<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-		</div>
-	</body>
+      gtag("config", "UA-123362726-2");
+    </script>
+    <meta
+      name="google-site-verification"
+      content="L6yY_Uj0w0OCiV3f8s0n_LynsaTkn6n0PusnyUjz_-g"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <title>{{ page.title }}</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+    <link href="/assets/css/syntax.css" rel="stylesheet" />
+  </head>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Roboto";
+      background-color: #e4e2dd;
+      margin: 0;
+    }
+
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #094074;
+      width: 100%;
+      height: 50px;
+      border-bottom: 1px solid black;
+    }
+    .navbar .title {
+      font-size: 30px;
+      float: left;
+      margin-top: 5px;
+      margin-left: 10px;
+    }
+    .navbar .about {
+      font-size: 20px;
+      float: right;
+      margin-top: 11px;
+      margin-right: 10px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .container,
+    .comments {
+      width: 60%;
+      margin: 0 auto;
+      margin-top: 50px;
+      border: 1px solid black;
+      padding: 5px 20px;
+      background-color: white;
+    }
+    .center {
+      text-align: center;
+      margin-bottom: 0;
+    }
+    .margin-top-zero {
+      margin-top: 0;
+    }
+    .black-border img {
+      border: 1px solid black;
+    }
+    .note {
+      background-color: #e78300;
+      border: 1px solid purple;
+      padding: 5px;
+      margin: 20px 5px;
+    }
+    p {
+      font-size: 18px;
+    }
+    .center img {
+      max-width: 100%;
+      height: auto;
+    }
+    div.highlight {
+      overflow-x: auto;
+    }
+    code {
+      display: inline-block;
+      width: 100%;
+      padding: 5px;
+    }
+    code span {
+      overflow-x: hidden;
+    }
+
+    #cusdis_thread iframe {
+      height: 1500px;
+    }
+
+    @media (max-width: 1000px) {
+      .container,
+      .comments {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <body>
+    <div class="navbar">
+      <span class="title"><a href="/">Raouf's Blog</a></span>
+      <span class="about"><a href="/about">About</a></span>
+    </div>
+
+    <div class="container">
+      <h1>{{ page.title }}</h1>
+      {{ content }}
+    </div>
+    <div class="comments">
+      <h2>Comments</h2>
+      <p>
+        There is no spam filter yet, so to avoid "Congratulations, you won free
+        money!" kind of things, comments will need to be approved manually
+        before showing up here. Sorry :/
+      </p>
+      <div
+        id="cusdis_thread"
+        data-host="https://cusdis.com"
+        data-app-id="4832b910-b336-4823-b4f6-0a76139bf4a0"
+        data-page-id="{{ page.permalink }}"
+        data-page-url="{{ page.url }}"
+        data-page-title="{{ page.title }}"
+      ></div>
+      <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+    </div>
+  </body>
 </html>
