@@ -110,8 +110,15 @@
       overflow-x: hidden;
     }
 
-    #cusdis_thread iframe {
-      height: 1500px;
+    .comment {
+      border-top: 1px solid black;
+      border-left: 1px solid black;
+      padding: 5px;
+      margin-top: 10px;
+      padding-left: 10px;
+    }
+    .comment-author {
+      font-weight: bold;
     }
 
     @media (max-width: 1000px) {
@@ -133,21 +140,728 @@
       {{ content }}
     </div>
     <div class="comments">
-      <h2>Comments</h2>
+      <h2>Comments (Archive)</h2>
       <p>
-        There is no spam filter yet, so to avoid "Congratulations, you won free
-        money!" kind of things, comments will need to be approved manually
-        before showing up here. Sorry :/
+        (The service I was using previously for handling comments is no more. So
+        for now, and while I figure out setuping a new one, here's a static
+        archive of previous comments)
       </p>
-      <div
-        id="cusdis_thread"
-        data-host="https://cusdis.com"
-        data-app-id="4832b910-b336-4823-b4f6-0a76139bf4a0"
-        data-page-id="{{ page.permalink }}"
-        data-page-url="{{ page.url }}"
-        data-page-title="{{ page.title }}"
-      ></div>
-      <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+      <div id="comments-archive">
+        <div class="comment">
+          <div>
+            <span class="comment-author">Kapo</span>
+            (<span>4/13/2023</span>)
+          </div>
+          <div>Congratulations, you won free money!</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>4/13/2023</span>)
+            </div>
+            <div>Hahaha, nice!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Lauren</span>
+            (<span>4/26/2023</span>)
+          </div>
+          <div>
+            Hello Raouf, I have spent days searching for resources on Perlin
+            noise and this is by far the best!! Thank you!!
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>4/26/2023</span>)
+            </div>
+            <div>Thank you so much Lauren, glad you like it!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">David</span>
+            (<span>5/2/2023</span>)
+          </div>
+          <div>Great Summary , Thank you.</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>5/2/2023</span>)
+            </div>
+            <div>Thanks David!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Infinityyf</span>
+            (<span>5/24/2023</span>)
+          </div>
+          <div>
+            Great article! But I found that the generated noise maybe not in
+            [-1,1]. Think about the pixel on the right top corner, and the
+            constant vector of the corner is (1,1), then the result of the noise
+            is 2. Am i wrong?
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>5/24/2023</span>)
+            </div>
+            <div>
+              Thanks! So the thing is that if the input (x, y) to the noise
+              function is at the "top right" corner, let's say (2, 2), then it's
+              not actually part of the grid square that goes from (1, 1) bottom
+              left to (2, 2) top right. It's actually part of the grid square
+              that goes from (2, 2) bottom left to (3, 3) top right. This is
+              because in the code, the `X` and `Y` (note the uppercase)
+              variables are computed as `const X = Math.floor(x) &amp; 255` and
+              `const Y = Math.floor(y) &amp; 255` respectively, and since it's
+              the `floor` function that we use, `X` and `Y` represent the
+              coordinates of the bottom left corner of the grid square. So when
+              the `topRight` variable is computed, it's value (if we still say
+              that the input (x, y) = (2, 2)) will actually be (xf-1, yf-1) =
+              (0-1, 0-1) = (-1, -1). But then when we do the interpolation, `xf`
+              and `yf` will be 0, so `u` and `v` will also be 0, which means the
+              only value used during the interpolation that actually influences
+              the final result is `dotBottomLeft`. `dotTopRight` could indeed be
+              greater than 1 (or smaller than -1), but it won't contribute much
+              to the final result. I'm not sure I fully answered your question
+              so don't hesitate to ask more :)
+            </div>
+
+            <div class="comment">
+              <div>
+                <span class="comment-author">Infinityyf</span>
+                (<span>5/31/2023</span>)
+              </div>
+              <div>
+                Totally answered my question! Thank you! Well，I found that I
+                was wrong. I forgot the "topRightVector" is actually (xf-1,
+                yf-1)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Sara</span>
+            (<span>5/25/2023</span>)
+          </div>
+          <div>
+            Hi! Great article, very good explanation! I have a question. What is
+            the relationship between grid control points and frequency? Can we
+            relate frequency as the inverse of the spacing between control
+            points? Thanks!
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>5/25/2023</span>)
+            </div>
+            <div>
+              Hi Sara, thanks! I believe they are not really related. I think of
+              the frequency as how close the different "samples" of the noise
+              function are. Let's say you plot the graph for a 1 dimensional
+              noise function, and then do a loop where `x` (the input) goes from
+              0 to 10, stepping by 1 each iteration (x++). You use `x` to sample
+              (compute the value of) that noise function by calling
+              `Noise1D(x)`. If you use a frequency of 0.5, then you're basically
+              sampling the noise function with input values that are closer to
+              one another. When doing `Noise1D(x * 0.5)` inside the loop, it's
+              basically the same as doing `Noise1D(x)` but inside a loop where
+              `x` goes from 0 to 5 with steps of 0.5 (x+=0.5). So in the end, if
+              you use those sampled values to, let's say, create a terrain, the
+              shape of that terrain will be the same as the shape of the noise
+              function. But if the size of the terrain is always the same, using
+              a lower frequency will basically stretch the "features" of the
+              terrain (bumps and downs of the noise function) over the same
+              terrain area, whereas if you use a larger frequency, you're
+              sampling the noise function over a larger range but also squeezing
+              all of those bumps and downs inside the same terrain area. Don't
+              hesitate to ask again if I didn't correctly answer your question
+              :)
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Genio Sainz</span>
+            (<span>6/9/2023</span>)
+          </div>
+          <div>
+            Thanks for sharing this excellent article. I have programmed a
+            JavaScript based demo that graphically explains many of the topics
+            explained in the article: input vectors, gradient vectors, corner
+            values, interpolations, etc. Link to DEMO:
+            https://geniosainz.github.io/Perlin-Noise-Demo/ Link to my GitHub
+            repository: https://github.com/GenioSainz/Perlin-Noise-Demo
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>6/9/2023</span>)
+            </div>
+            <div>
+              Thanks! Your demo is awesome, I wish I had something like that
+              when I was learning the algorithm!
+            </div>
+
+            <div class="comment">
+              <div>
+                <span class="comment-author">Genio Sainz</span>
+                (<span>6/9/2023</span>)
+              </div>
+              <div>
+                Thank you very much !!! I have added the functionality to round
+                the pixels that form the noise image giving the appearance of a
+                contour plot of a function of two variables. This value can be
+                modified by using the slider control
+              </div>
+
+              <div class="comment">
+                <div>
+                  <span class="comment-author">rtouti</span>
+                  (<span>6/9/2023</span>)
+                </div>
+                <div>
+                  Nice! My favorite feature in your visualization was those 2
+                  "Plot Column/Row Vector XX/YY" graphs, and now they're even
+                  better! Really nice that you can see the 1D "slices" of the 2D
+                  noise
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Joe</span>
+            (<span>9/22/2023</span>)
+          </div>
+          <div>
+            Float x = math.floor(x) &amp; 255 What does the ampersand stand for?
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>9/24/2023</span>)
+            </div>
+            <div>
+              It's a "bitwise and" operator. It's something that's built-in
+              several programming languages. It's used to manipulate the
+              individual bits of numbers. In this specific case, doing
+              "Math.floor(x) &amp; 255" is roughly equivalent to doing
+              "Math.floor(x) % 256", but it's usually a lot faster and can also
+              deal with negative numbers better. You can look up "bitwise
+              operators" to find out more about it
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Paul</span>
+            (<span>11/18/2023</span>)
+          </div>
+          <div>
+            I didn't expect to find such a well explained and formulated
+            article. I remember from linear algebra that the dot product can be
+            thought of as how much two vectors contribute to each other. So it
+            makes sense that the values wouldn't change much between tiny
+            changes in x and y.
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>11/18/2023</span>)
+            </div>
+            <div>Thanks a lot Paul! Glad you enjoyed it</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Anh</span>
+            (<span>7/18/2024</span>)
+          </div>
+          <div>such a well-explained article. Ty so much :D</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>7/18/2024</span>)
+            </div>
+            <div>Thanks, glad you liked it!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">ougk78</span>
+            (<span>8/1/2024</span>)
+          </div>
+          <div>
+            I love the very detailed and simple article, but I failed to
+            understand what xf and yf are. are they the floating point of the
+            position of the pixel? what if the position is an integer? is it the
+            position of the pixel relative to the position of the chunk (like
+            position 0.63 of the chunk)? im confused here
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>8/1/2024</span>)
+            </div>
+            <div>
+              Thanks! So about xf and yf, they are the "fractional" part of the
+              input (x and y). Let's say the value of x is 3.45, then xf would
+              be the part after the "." (0.45, the fractional part) and X
+              (uppercase) would be what's before the "." (3, the integer part).
+              If x is an integer, the same principle still applies. For example,
+              if x=5 (which can also be written as 5.0), then X=5 and xf=0.0
+            </div>
+
+            <div class="comment">
+              <div>
+                <span class="comment-author">ougk78</span>
+                (<span>8/2/2024</span>)
+              </div>
+              <div>
+                well, Isnt the position of the pixel always an integer? it goes
+                into an array, so it should be, unless I'm missing something
+                here. enlighten me
+              </div>
+
+              <div class="comment">
+                <div>
+                  <span class="comment-author">rtouti</span>
+                  (<span>8/2/2024</span>)
+                </div>
+                <div>
+                  It'a an integer, but giving integer input to Perlin noise will
+                  always return 0 (to undertand why, read what's just before the
+                  fractal brownian motion section in the article), so the
+                  "trick" is to multiply the texture coordinates by some
+                  floating point value (like 0.048 for example). The section on
+                  fractal brownian motion goes into more details about how
+                  multiplying the input coordinates can be very useful
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">someone</span>
+            (<span>8/19/2024</span>)
+          </div>
+          <div>
+            This was a great resource. It was way better than wikipedia :)
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>8/19/2024</span>)
+            </div>
+            <div>Thanks, happy it was helpful!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">kotlinc0der</span>
+            (<span>8/30/2024</span>)
+          </div>
+          <div>
+            I was working on a demo project for 2d terrain generation and came
+            across your well noted and explained article. I have adapted some of
+            the code here to my demo project and added a reference to the
+            article which you can find on
+            https://github.com/kotlinc0der/terrain-generator. Thank you for the
+            good work.
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>8/30/2024</span>)
+            </div>
+            <div>
+              That's a great project! Glad the article was helpful, thanks a
+              lot!
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Syntax-Error</span>
+            (<span>12/31/2024</span>)
+          </div>
+          <div>
+            Such a great resource. Thank you for your service of providing
+            consise info for free. Thank you
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>12/31/2024</span>)
+            </div>
+            <div>Thanks, glad you liked it!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Ji</span>
+            (<span>1/6/2025</span>)
+          </div>
+          <div>
+            Thank you for this explanation ! I'm trying to make a mouse movement
+            project that looks decently humanized and it sounds like Perlin
+            noise + FBM would be the ideal way to add noise to my mouse moves :)
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>1/6/2025</span>)
+            </div>
+            <div>
+              Thanks for reading it! Perlin noise + FBM does sound like a good
+              fit :) Changing the amplitude/frequency parameters would give a
+              lot of control as to how the noise would affect the mouse
+              position.
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">delocxo</span>
+            (<span>2/13/2025</span>)
+          </div>
+          <div>
+            Im not using this language so i translated it and its very good
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>2/13/2025</span>)
+            </div>
+            <div>Thanks!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">BAGG</span>
+            (<span>2/26/2025</span>)
+          </div>
+          <div>
+            I made it in python:
+            <div class="language-python highlighter-rouge">
+              <div class="highlight">
+                <pre
+                  class="highlight"
+                ><code><span class="kn">import</span> <span class="n">random</span>
+<span class="kn">import</span> <span class="n">math</span>
+
+<span class="k">class</span> <span class="nc">Vector2</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="p">.</span><span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">shuffle</span><span class="p">(</span><span class="n">array_to_shuffle</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">array_to_shuffle</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">e</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">array_to_shuffle</span><span class="p">[</span><span class="n">e</span><span class="p">],</span> <span class="n">array_to_shuffle</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">array_to_shuffle</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">array_to_shuffle</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> 
+
+<span class="k">def</span> <span class="nf">make_permutation</span><span class="p">():</span>
+    <span class="n">permutation</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="nf">range</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
+    <span class="nf">shuffle</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+    <span class="n">permutation</span><span class="p">.</span><span class="nf">extend</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span> <span class="c1"># Repeat the array
+</span>    <span class="k">return</span> <span class="n">permutation</span>
+
+<span class="c1"># Generate permutation table
+</span><span class="n">permutation</span> <span class="o">=</span> <span class="nf">make_permutation</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_constant_vector</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="c1"># v is the value from the permutation table
+</span>    <span class="n">h</span> <span class="o">=</span> <span class="n">v</span> <span class="o">&amp;</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nc">Vector2</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nc">Vector2</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fade</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="nf">return </span><span class="p">((</span><span class="mi">6</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span>
+
+<span class="k">def</span> <span class="nf">lerp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">a2</span> <span class="o">-</span> <span class="n">a1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">noise2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">255</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="nf">floor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">255</span>
+
+    <span class="n">xf</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">math</span><span class="p">.</span><span class="nf">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">yf</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">math</span><span class="p">.</span><span class="nf">floor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="n">top_right</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">xf</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">yf</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">top_left</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">yf</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">bottom_right</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">xf</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">yf</span><span class="p">)</span>
+    <span class="n">bottom_left</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">yf</span><span class="p">)</span>
+
+    <span class="c1"># Select a value from the permutation array for each of the 4 corners
+</span>    <span class="n">value_top_right</span> <span class="o">=</span> <span class="n">permutation</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">X</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">value_top_left</span> <span class="o">=</span> <span class="n">permutation</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">value_bottom_right</span> <span class="o">=</span> <span class="n">permutation</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">X</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Y</span><span class="p">]</span>
+    <span class="n">value_bottom_left</span> <span class="o">=</span> <span class="n">permutation</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="o">+</span> <span class="n">Y</span><span class="p">]</span>
+
+    <span class="n">dot_top_right</span> <span class="o">=</span> <span class="n">top_right</span><span class="p">.</span><span class="nf">dot</span><span class="p">(</span><span class="nf">get_constant_vector</span><span class="p">(</span><span class="n">value_top_right</span><span class="p">))</span>
+    <span class="n">dot_top_left</span> <span class="o">=</span> <span class="n">top_left</span><span class="p">.</span><span class="nf">dot</span><span class="p">(</span><span class="nf">get_constant_vector</span><span class="p">(</span><span class="n">value_top_left</span><span class="p">))</span>
+    <span class="n">dot_bottom_right</span> <span class="o">=</span> <span class="n">bottom_right</span><span class="p">.</span><span class="nf">dot</span><span class="p">(</span><span class="nf">get_constant_vector</span><span class="p">(</span><span class="n">value_bottom_right</span><span class="p">))</span>
+    <span class="n">dot_bottom_left</span> <span class="o">=</span> <span class="n">bottom_left</span><span class="p">.</span><span class="nf">dot</span><span class="p">(</span><span class="nf">get_constant_vector</span><span class="p">(</span><span class="n">value_bottom_left</span><span class="p">))</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="nf">fade</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="nf">fade</span><span class="p">(</span><span class="n">yf</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nf">lerp</span><span class="p">(</span><span class="n">u</span><span class="p">,</span>
+                <span class="nf">lerp</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dot_bottom_left</span><span class="p">,</span> <span class="n">dot_top_left</span><span class="p">),</span>
+                <span class="nf">lerp</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dot_bottom_right</span><span class="p">,</span> <span class="n">dot_top_right</span><span class="p">)</span>
+            <span class="p">)</span>
+
+<span class="c1"># Example usage
+</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">5.3</span><span class="p">,</span> <span class="mf">4.8</span>
+<span class="n">result</span> <span class="o">=</span> <span class="nf">noise2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>2/26/2025</span>)
+            </div>
+            <div>Nice!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Dan</span>
+            (<span>3/30/2025</span>)
+          </div>
+          <div>Very nice helped me more than YouTube</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>3/30/2025</span>)
+            </div>
+            <div>Thanks Dan, glad you liked it!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Julian</span>
+            (<span>4/18/2025</span>)
+          </div>
+          <div>
+            Wow this is extremely helpful! Thank you for the arcticle and
+            especially for the explenations. Helped me more than anything else I
+            watched and read about this topic before! Btw I'm writing my
+            bachelor thesis at the moment which is about procedural terrain
+            generation. I don't know if I'm using this arcticle (so quoting it),
+            but if I'd use it I wanted to ask if that's ok for you. Thanks!
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>4/18/2025</span>)
+            </div>
+            <div>
+              Hi Julian, thank you so much for the kind words! And if you use
+              this article, sure you can quote it, no problem with that!
+            </div>
+
+            <div class="comment">
+              <div>
+                <span class="comment-author">Julian</span>
+                (<span>4/22/2025</span>)
+              </div>
+              <div>Thank you! :)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Henry</span>
+            (<span>5/14/2025</span>)
+          </div>
+          <div>Incredible content. Thank you for your work!</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>5/14/2025</span>)
+            </div>
+            <div>Thank you so much Henry!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Jojo</span>
+            (<span>5/18/2025</span>)
+          </div>
+          <div>Nice work Keep it up</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>5/18/2025</span>)
+            </div>
+            <div>Thanks!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Joey</span>
+            (<span>5/18/2025</span>)
+          </div>
+          <div>
+            I just wanted to say thank you. This is the best, most concise
+            explanation of perlin noise I have found. It cleared up many small
+            confusions I had from reading other sources. You have a knack for
+            communicating complex subjects and I hope you continue to add onto
+            your blog. :)
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>5/18/2025</span>)
+            </div>
+            <div>
+              Thank you so much Joey! I've been wanting to post more for years,
+              but every time I start writing something, there's so many things I
+              want to add to the post that I just get overwhelmed. Maybe I'll
+              try writing something of smaller scale and be less perfectionist?
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Nick</span>
+            (<span>6/7/2025</span>)
+          </div>
+          <div>Thanks Raouf, was very helpful!</div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>6/7/2025</span>)
+            </div>
+            <div>Thanks a lot Nick!</div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">scr</span>
+            (<span>9/3/2025</span>)
+          </div>
+          <div>
+            Hey, i'm a student at a school named 42 and currently doing a
+            project that aims to recreate minecraft's voxel engine. This greatly
+            helped me, I always have a hard time reading docs and stuff because
+            I really suck at anything involving maths but you explained it in a
+            way that I think everyone can understand. I really thank you for
+            that, no other guide helped better than you did. Asked tons of AIs
+            but they couldn't even get close to your guide. Thanks a lot! Now my
+            generation really looks like Minecraft beta's and the feeling to
+            play on it is just awesome.
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>9/6/2025</span>)
+            </div>
+            <div>
+              Thanks for the kind words! Really happy you liked the explanation!
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div>
+            <span class="comment-author">Joshua</span>
+            (<span>10/8/2025</span>)
+          </div>
+          <div>
+            Thanks so much for this! I've seen Perlin noise videos for years
+            now, and have always wanted to implement its usage myself. Now I
+            finally have an appropriate place to use it (explained in more
+            detail in the next paragraph), so I'm looking into it, and this is a
+            very nice explanation of it. I'm a flutter dev at an organization. I
+            am at liberty right now to implement polish for different aspects of
+            the app (the app makes heavy use of google maps integration), and
+            what bothers me most is how unpolished the chat section of the app
+            looks and feels. So, I'm adding little animations and other tweaks
+            that people expect from other chat apps. I wanted to add a textured
+            background, but wanted to do something special and thought of doing
+            a topographic map style background using Perlin noise. I also wanted
+            to try implementing it myself instead of doing it with AI because
+            it's something I want to know more about. So, again, thank you!
+          </div>
+
+          <div class="comment">
+            <div>
+              <span class="comment-author">rtouti</span>
+              (<span>10/9/2025</span>)
+            </div>
+            <div>
+              Thank you so much for the kind words Joshua! And good luck!
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
